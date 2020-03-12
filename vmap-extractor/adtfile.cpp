@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,10 @@ ADTFile::ADTFile(char* filename): ADT(filename)
 
 bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY, StringSet& failedPaths,int iCoreNumber, const void *szRawVMAPMagic)
 {
-    if (ADT.isEof()) { return false; }
+    if (ADT.isEof())
+    {
+        return false;
+    }
 
     uint32 size;
 
@@ -48,7 +51,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY, StringSet& failed
     xMap = TempMapNumber.substr(TempMapNumber.find("_") + 1, (TempMapNumber.find_last_of("_") - 1) - (TempMapNumber.find("_")));
     yMap = TempMapNumber.substr(TempMapNumber.find_last_of("_") + 1, (TempMapNumber.length()) - (TempMapNumber.find_last_of("_")));
     AdtFilename.erase((AdtFilename.length() - xMap.length() - yMap.length() - 2), (xMap.length() + yMap.length() + 2));
-    
+
     std::string AdtMapNumber = xMap + ' ' + yMap + ' ' + GetUniformName(AdtFilename);
 
     std::string dirname = std::string(szWorkDirWmo) + "/dir_bin";

@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@
  /* This isn't the nicest way to do things..
  * TODO: Fix this with snprintf instead and check that it still works
  */
-#define sprintf_s sprintf 
+#define sprintf_s sprintf
 #endif
 
 #if defined( __GNUC__ )
@@ -51,6 +51,7 @@
 #ifndef O_BINARY
 #define O_BINARY 0
 #endif
+
 #else
 #include <io.h>
 #endif
@@ -77,10 +78,14 @@ FILE* openWoWExe()
     {
 #ifdef WIN32
         if (fopen_s(&pFile, ExeFileName[iFileCount], "rb") == 0)
+        {
             return pFile; ///< successfully located the WoW executable
+        }
 #else
         if ((pFile = fopen(ExeFileName[iFileCount], "rb")))
+        {
             return pFile; ///< successfully located the WoW executable
+        }
 #endif
     }
 
@@ -90,7 +95,7 @@ FILE* openWoWExe()
 /**
 *  This function loads up a binary file (WoW executable), then searches for and returns
 *  the build number of the file. The build number is searched for in hex form.
-* 
+*
 *  @PARAM sFilename is the filename of the WoW executable to be loaded
 *  @RETURN iBuild the build number of the WoW executable, or 0 if failed
 */
@@ -128,8 +133,10 @@ int getBuildNumber()
 
     /// jump over as much of the file as possible, before we start searching for the base #
     for (int i = 0; i < 3300; i++)
+    {
         fread(jumpBytesBuffer, sizeof(jumpBytesBuffer), 1, pFile);
-       
+    }
+
     /// Search for the build #
     while (fread(byteSearchBuffer, 1, 1, pFile))
     {
@@ -143,13 +150,21 @@ int getBuildNumber()
             fread(preWOTLKbuildNumber, sizeof(preWOTLKbuildNumber), 1, pFile);
 
             if (!memcmp(preWOTLKbuildNumber, vanillaBuild1, sizeof(preWOTLKbuildNumber))) /// build is Vanilla?
+            {
                 return 5875;
+            }
             else if (!memcmp(preWOTLKbuildNumber, vanillaBuild2, sizeof(preWOTLKbuildNumber))) /// build is Vanilla?
+            {
                 return 6005;
+            }
             else if (!memcmp(preWOTLKbuildNumber, vanillaBuild3, sizeof(preWOTLKbuildNumber))) /// build is Vanilla?
+            {
                 return 6141;
+            }
             else if (!memcmp(preWOTLKbuildNumber, tbcBuild, sizeof(preWOTLKbuildNumber))) /// build is TBC?
+            {
                 return 8606;
+            }
         }
 
         /// WOTLK, CATA, MoP
@@ -159,11 +174,17 @@ int getBuildNumber()
             fread(postTBCbuildNumber, sizeof(postTBCbuildNumber), 1, pFile);
 
             if (!memcmp(postTBCbuildNumber, wotlkBuild, sizeof(postTBCbuildNumber))) /// build is WOTLK?
+            {
                 return 12340;
+            }
             else if (!memcmp(postTBCbuildNumber, cataBuild, sizeof(postTBCbuildNumber))) /// build is CATA?
+            {
                 return 15595;
+            }
             else if (!memcmp(postTBCbuildNumber, mopBuild, sizeof(postTBCbuildNumber))) /// build is MoP?
+            {
                 return 18414;
+            }
         }
     }
 
@@ -412,6 +433,7 @@ void CreateDir(const std::string& sPath)
 #else
     mkdir(sPath.c_str(), 0777);
 #endif
+
 }
 
 /**

@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -168,7 +168,9 @@ bool Model::ConvertToVMAPModel(std::string& outfilename,int iCoreNumber, const v
     fwrite(&wsize, sizeof(int), 1, output);
     fwrite(&nVertices, sizeof(int), 1, output);
     if (nVertices > 0)
-        { fwrite(vertices, sizeof(float) * 3, nVertices, output); }
+    {
+        fwrite(vertices, sizeof(float) * 3, nVertices, output);
+    }
 
     fclose(output);
 
@@ -197,7 +199,7 @@ ModelInstance::ModelInstance(MPQFile& f, string& ModelInstName, uint32 mapID, ui
         f.read(&scaleZeroOnly,4);  // The above three lines introduced a regression bug in Mangos Zero, is Fine for other cores.
         sc = scaleZeroOnly / 1024.0f; // scale factor - divide by 1024. why not just use a float?
     }
-    
+
     char tempname[512];
     sprintf(tempname, "%s/%s", szWorkDirWmo, ModelInstName.c_str());
     FILE* input;
@@ -215,11 +217,16 @@ ModelInstance::ModelInstance(MPQFile& f, string& ModelInstName, uint32 mapID, ui
     fclose(input);
 
     if (nVertices == 0 || file_read <= 0)
-        { return; }
+    {
+        return;
+    }
 
     uint16 adtId = 0;// not used for models
     uint32 flags = MOD_M2;
-    if (tileX == 65 && tileY == 65) { flags |= MOD_WORLDSPAWN; }
+    if (tileX == 65 && tileY == 65)
+    {
+        flags |= MOD_WORLDSPAWN;
+    }
     //write mapID, tileX, tileY, Flags, ID, Pos, Rot, Scale, name
     fwrite(&mapID, sizeof(uint32), 1, pDirfile);
     fwrite(&tileX, sizeof(uint32), 1, pDirfile);
@@ -256,11 +263,15 @@ bool ExtractSingleModel(std::string& origPath, std::string& fixedName, StringSet
     output += fixedName;
 
     if (FileExists(output.c_str()))
-        { return true; }
+    {
+        return true;
+    }
 
     Model mdl(origPath);                                    // Possible changed fname
     if (!mdl.open(failedPaths, iCoreNumber))
-        { return false; }
+    {
+        return false;
+    }
 
     return mdl.ConvertToVMAPModel(output, iCoreNumber, szRawVMAPMagic);
 }
@@ -288,13 +299,17 @@ void ExtractGameobjectModels(int iCoreNumber, const void *szRawVMAPMagic)
         path = it->getString(1);
 
         if (path.length() < 4)
-            { continue; }
+        {
+            continue;
+        }
 
         string name;
 
         string ch_ext = GetExtension(path);
         if (ch_ext.empty())
-            { continue; }
+        {
+            continue;
+        }
 
         bool result = false;
         if (ch_ext == "wmo")
@@ -323,7 +338,9 @@ void ExtractGameobjectModels(int iCoreNumber, const void *szRawVMAPMagic)
     {
         printf("\n Warning: Some models could not be extracted, see below\n");
         for (StringSet::const_iterator itr = failedPaths.begin(); itr != failedPaths.end(); ++itr)
-            { printf(" Could not find file of model %s\n", itr->c_str()); }
+        {
+            printf(" Could not find file of model %s\n", itr->c_str());
+        }
         printf("\n A few of these warnings are expected to happen, so be not alarmed!\n");
     }
 

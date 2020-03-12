@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -117,31 +117,45 @@ bool handleArgs(int argc, char** argv,
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             float maxangle = atof(param);
             if (maxangle <= 90.f && maxangle >= 45.f)
-                { maxAngle = maxangle; }
+            {
+                maxAngle = maxangle;
+            }
             else
-                { printf("invalid option for '--maxAngle', using default\n"); }
+            {
+                printf("invalid option for '--maxAngle', using default\n");
+            }
         }
         else if (strcmp(argv[i], "--threads") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             int nThreads = atoi(param);
             if (nThreads)
-                { num_threads = nThreads; }
+            {
+                num_threads = nThreads;
+            }
             else
-                { printf("invalid option for '--threads', using single threaded build\n"); }
+            {
+                printf("invalid option for '--threads', using single threaded build\n");
+            }
         }
         else if (strcmp(argv[i], "--tile") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             char* stileX = strtok(param, ",");
             char* stileY = strtok(NULL, ",");
@@ -149,9 +163,13 @@ bool handleArgs(int argc, char** argv,
             int tiley = atoi(stileY);
 
             if ((tilex > 0 && tilex < 64) || (tilex == 0 && strcmp(stileX, "0") == 0))
-                { tileX = tilex; }
+            {
+                tileX = tilex;
+            }
             if ((tiley > 0 && tiley < 64) || (tiley == 0 && strcmp(stileY, "0") == 0))
-                { tileY = tiley; }
+            {
+                tileY = tiley;
+            }
 
             if (tileX < 0 || tileY < 0)
             {
@@ -163,66 +181,106 @@ bool handleArgs(int argc, char** argv,
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { skipLiquid = true; }
+            {
+                skipLiquid = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { skipLiquid = false; }
+            {
+                skipLiquid = false;
+            }
             else
-                { printf("invalid option for '--skipLiquid', using default\n"); }
+            {
+                printf("invalid option for '--skipLiquid', using default\n");
+            }
         }
         else if (strcmp(argv[i], "--skipContinents") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { skipContinents = true; }
+            {
+                skipContinents = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { skipContinents = false; }
+            {
+                skipContinents = false;
+            }
             else
-                { printf("invalid option for '--skipContinents', using default\n"); }
+            {
+                printf("invalid option for '--skipContinents', using default\n");
+            }
         }
         else if (strcmp(argv[i], "--skipJunkMaps") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { skipJunkMaps = true; }
+            {
+                skipJunkMaps = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { skipJunkMaps = false; }
+            {
+                skipJunkMaps = false;
+            }
             else
-                { printf("invalid option for '--skipJunkMaps', using default\n"); }
+            {
+                printf("invalid option for '--skipJunkMaps', using default\n");
+            }
         }
         else if (strcmp(argv[i], "--skipBattlegrounds") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { skipBattlegrounds = true; }
+            {
+                skipBattlegrounds = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { skipBattlegrounds = false; }
+            {
+                skipBattlegrounds = false;
+            }
             else
-                { printf("invalid option for '--skipBattlegrounds', using default\n"); }
+            {
+                printf("invalid option for '--skipBattlegrounds', using default\n");
+            }
         }
         else if (strcmp(argv[i], "--debugOutput") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { debugOutput = true; }
+            {
+                debugOutput = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { debugOutput = false; }
+            {
+                debugOutput = false;
+            }
             else
-                { printf("invalid option for '--debugOutput', using default true\n"); }
+            {
+                printf("invalid option for '--debugOutput', using default true\n");
+            }
         }
         else if (strcmp(argv[i], "--silent") == 0)
         {
@@ -232,20 +290,30 @@ bool handleArgs(int argc, char** argv,
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             if (strcmp(param, "true") == 0)
-                { bigBaseUnit = true; }
+            {
+                bigBaseUnit = true;
+            }
             else if (strcmp(param, "false") == 0)
-                { bigBaseUnit = false; }
+            {
+                bigBaseUnit = false;
+            }
             else
-                { printf("invalid option for '--bigBaseUnit', using default false\n"); }
+            {
+                printf("invalid option for '--bigBaseUnit', using default false\n");
+            }
         }
         else if (strcmp(argv[i], "--offMeshInput") == 0)
         {
             param = argv[++i];
             if (!param)
-                { return false; }
+            {
+                return false;
+            }
 
             offMeshInputPath = param;
         }
@@ -258,7 +326,9 @@ bool handleArgs(int argc, char** argv,
         {
             int map = atoi(argv[i]);
             if (map > 0 || (map == 0 && (strcmp(argv[i], "0") == 0)))
-                { mapnum = map; }
+            {
+                mapnum = map;
+            }
             else
             {
                 printf("invalid map id\n");
@@ -305,51 +375,69 @@ int main(int argc, char** argv)
                                  debugOutput, silent, bigBaseUnit, num_threads, offMeshInputPath);
 
     if (!validParam)
-        { return silent ? -1 : finish(" You have specified invalid parameters (use -h for more help)", -1); }
+    {
+        return silent ? -1 : finish(" You have specified invalid parameters (use -h for more help)", -1);
+    }
 
     if (mapnum == -1 && debugOutput)
     {
         if (silent)
-            { return -2; }
+        {
+            return -2;
+        }
 
         printf(" You have specifed debug output, but didn't specify a map to generate.\n");
         printf(" This will generate debug output for ALL maps.\n");
         printf(" Are you sure you want to continue? (y/n) ");
         if (getchar() != 'y')
-            { return 0; }
+        {
+            return 0;
+        }
     }
 
     if (!checkDirectories(debugOutput))
-        { return silent ? -3 : finish(" Press any key to close...", -3); }
+    {
+        return silent ? -3 : finish(" Press any key to close...", -3);
+    }
 
     MapBuilder builder(map_magic, maxAngle, skipLiquid, skipContinents, skipJunkMaps,
                        skipBattlegrounds, debugOutput, bigBaseUnit, offMeshInputPath);
 
     ACE_Time_Value elapsed;
     ACE_High_Res_Timer timer;
-    
+
     timer.start();
     if (tileX > -1 && tileY > -1 && mapnum >= 0)
-        { builder.buildSingleTile(mapnum, tileX, tileY); }
-    else 
+    {
+        builder.buildSingleTile(mapnum, tileX, tileY);
+    }
+    else
     {
         if (num_threads && builder.activate(num_threads)== -1)
         {
             if (!silent)
-              { printf(" Thread initialization was not ok. The build is single threaded\n"); }
+            {
+                printf(" Thread initialization was not ok. The build is single threaded\n");
+            }
         }
 
         if (builder.activated())
-          { printf(" Using %d thread(s) for building\n", num_threads);}
+        {
+            printf(" Using %d thread(s) for building\n", num_threads);
+        }
 
         if (mapnum >= 0)
-          { builder.buildMap(uint32(mapnum), true); }
+        {
+            builder.buildMap(uint32(mapnum), true);
+        }
         else
-          { builder.buildAllMaps(); }
+        {
+            builder.buildAllMaps();
+        }
     }
     timer.stop();
     timer.elapsed_time(elapsed);
     printf(" \n Total build time: %ld seconds\n\n", elapsed.sec());
-    
+
     return silent ? 1 : finish(" Movemap build is complete! Press enter to exit\n", 1);
 }

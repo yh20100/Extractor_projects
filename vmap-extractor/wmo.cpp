@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -353,7 +353,9 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
             // Skip no collision triangles
             if (MOPY[2 * i]&WMO_MATERIAL_NO_COLLISION ||
                 !(MOPY[2 * i] & (WMO_MATERIAL_HINT | WMO_MATERIAL_COLLIDE_HIT)))
-                { continue; }
+            {
+                continue;
+            }
             // Use this triangle
             for (int j = 0; j < 3; ++j)
             {
@@ -392,7 +394,9 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
         fwrite(VERT, 4, 3, output);
         for (uint32 i = 0; i < nVertices; ++i)
             if (IndexRenum[i] >= 0)
-                { check -= fwrite(MOVT + 3 * i, sizeof(float), 3, output); }
+            {
+                check -= fwrite(MOVT + 3 * i, sizeof(float), 3, output);
+            }
 
         assert(check == 0);
 
@@ -409,11 +413,17 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
         // according to WoW.Dev Wiki:
         uint32 liquidEntry;
         if (rootWMO->liquidType & 4)
-            { liquidEntry = liquidType; }
+        {
+            liquidEntry = liquidType;
+        }
         else if (liquidType == 15)
-            { liquidEntry = 0; }
+        {
+            liquidEntry = 0;
+        }
         else
-            { liquidEntry = liquidType + 1; }
+        {
+            liquidEntry = liquidType + 1;
+        }
 
         if (!liquidEntry)
         {
@@ -428,11 +438,15 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
                 {
                     ++v2;
                     if (v2 >= v1)
-                        { break; }
+                    {
+                        break;
+                    }
                 }
 
                 if (v2 < v1 && (LiquBytes[v2] & 0xF) != 15)
-                    { liquidEntry = (LiquBytes[v2] & 0xF) + 1; }
+                {
+                    liquidEntry = (LiquBytes[v2] & 0xF) + 1;
+                }
             }
         }
 
@@ -489,8 +503,8 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
                             liquidEntry = 21;   // Naxxramas slime
                         }
                         else
-                        { 
-                            liquidEntry = 4; 
+                        {
+                            liquidEntry = 4;
                         }    // Normal slime
                     }
                     if (iCoreNumber == CLIENT_WOTLK || iCoreNumber == CLIENT_CATA)
@@ -513,7 +527,9 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE* output, WMORoot* rootWMO, bool pPrecis
         fwrite(hlq, sizeof(WMOLiquidHeader), 1, output);
         // only need height values, the other values are unknown anyway
         for (uint32 i = 0; i < LiquEx_size / sizeof(WMOLiquidVert); ++i)
-            { fwrite(&LiquEx[i].height, sizeof(float), 1, output); }
+        {
+            fwrite(&LiquEx[i].height, sizeof(float), 1, output);
+        }
         // todo: compress to bit field
         fwrite(LiquBytes, 1, hlq->xtiles * hlq->ytiles, output);
     }
@@ -572,7 +588,9 @@ WMOInstance::WMOInstance(MPQFile& f, std::string& WmoInstName, uint32 mapID, uin
     fclose(input);
 
     if (nVertices == 0 || file_read <= 0)
-        { return; }
+    {
+        return;
+    }
 
     float x, z;
     x = pos.x;
@@ -588,7 +606,10 @@ WMOInstance::WMOInstance(MPQFile& f, std::string& WmoInstName, uint32 mapID, uin
 
     float scale = 1.0f;
     uint32 flags = MOD_HAS_BOUND;
-    if (tileX == 65 && tileY == 65) { flags |= MOD_WORLDSPAWN; }
+    if (tileX == 65 && tileY == 65)
+    {
+        flags |= MOD_WORLDSPAWN;
+    }
     //write mapID, tileX, tileY, Flags, ID, Pos, Rot, Scale, Bound_lo, Bound_hi, name
     fwrite(&mapID, sizeof(uint32), 1, pDirfile);
     fwrite(&tileX, sizeof(uint32), 1, pDirfile);
@@ -612,11 +633,13 @@ bool ExtractSingleWmo(std::string& fname, int iCoreNumber, const void *szRawVMAP
     // Copy files from archive
     char szLocalFile[1024];
     string plain_name = GetUniformName(fname);
-        
+
     sprintf(szLocalFile, "%s/%s", szWorkDirWmo, plain_name.c_str());
 
     if (FileExists(szLocalFile))
-        { return true; }
+    {
+        return true;
+    }
 
     int p = 0;
     //Select root wmo files
@@ -629,12 +652,16 @@ bool ExtractSingleWmo(std::string& fname, int iCoreNumber, const void *szRawVMAP
         {
             int m = cpy[i];
             if (isdigit(m))
-                { p++; }
+            {
+                p++;
+            }
         }
     }
 
     if (p == 3)
-        { return true; }
+    {
+        return true;
+    }
 
     bool file_ok = true;
     printf(" Extracting %s\n", fname.c_str());
@@ -666,7 +693,7 @@ bool ExtractSingleWmo(std::string& fname, int iCoreNumber, const void *szRawVMAP
             sprintf(groupFileName, "%s_%03d.wmo", temp, i);
 
             string s(groupFileName);
-            
+
             WMOGroup fgroup(s);
             if (!fgroup.open())
             {
@@ -685,7 +712,9 @@ bool ExtractSingleWmo(std::string& fname, int iCoreNumber, const void *szRawVMAP
 
     // Delete the extracted file in the case of an error
     if (!file_ok)
-        { remove(szLocalFile); }
+    {
+        remove(szLocalFile);
+    }
     return true;
 }
 
@@ -708,9 +737,11 @@ bool ExtractWmo(int iCoreNumber, const void *szRawVMAPMagic)
     }
 
     if (success)
-        { printf("\n Extraction of WMO's complete, No fatal errors\n"); }
-        { printf("\n Reading Maps\n"); }
-        { printf(" _______________________________________________________\n"); }
+    {
+        printf("\n Extraction of WMO's complete, No fatal errors\n");
+    }
+    printf("\n Reading Maps\n");
+    printf(" _______________________________________________________\n");
 
     return success;
 }

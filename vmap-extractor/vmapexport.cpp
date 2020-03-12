@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2019  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2020 MaNGOS <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,7 +108,9 @@ void compute_md5(const char* value, char* result)
     md5_finish(&ctx, digest);
 
     for(int i=0;i<16;i++)
+    {
         sprintf(result+2*i,"%02x",digest[i]);
+    }
     result[32]='\0';
 }
 
@@ -126,12 +128,19 @@ std::string GetUniformName(std::string& path)
       file = path.substr(found+1);
       tempPath = path.substr(0,found);
     }
-    else { file = tempPath = path; }
+    else
+    {
+        file = tempPath = path;
+    }
 
     if(!tempPath.empty())
+    {
         compute_md5(tempPath.c_str(),digest);
+    }
     else
+    {
         compute_md5("\\",digest);
+    }
 
     string result;
     result = result.assign(digest) + "-" + file;
@@ -143,8 +152,14 @@ std::string GetExtension(std::string& path)
 {
     string ext;
     size_t foundExt = path.find_last_of(".");
-    if (foundExt != std::string::npos) { ext=path.substr(foundExt+1);}
-    else {ext.clear();}
+    if (foundExt != std::string::npos)
+    {
+        ext=path.substr(foundExt+1);
+    }
+    else
+    {
+        ext.clear();
+    }
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     return ext;
 }
@@ -170,10 +185,10 @@ void ReadLiquidTypeTableDBC()
         LiqType[dbc.getRecord(x).getUInt(0)] = dbc.getRecord(x).getUInt(3);
     }
 
-    printf(" Success! (%u LiqTypes loaded)\n", (unsigned int)LiqType_count);
+    printf(" Success! (%u Liquid Types loaded)\n", (unsigned int)LiqType_count);
 }
 
-void ParsMapFiles(int iCoreNumber, char const *szRawVMAPMagic)
+void ParseMapFiles(int iCoreNumber)
 {
     char fn[512];
     //char id_filename[64];
@@ -210,7 +225,9 @@ void ParsMapFiles(int iCoreNumber, char const *szRawVMAPMagic)
     {
         printf(" Warning: Some models could not be extracted, see below\n");
         for (StringSet::const_iterator itr = failedPaths.begin(); itr != failedPaths.end(); ++itr)
-            { printf("Could not find file of model %s\n", itr->c_str()); }
+        {
+            printf("Could not find file of model %s\n", itr->c_str());
+        }
         printf(" A few not found models can be expected and are not alarming.\n");
     }
 }
@@ -222,6 +239,7 @@ void getGamePath()
 #else
     strcpy(input_path, "Data/");
 #endif
+
 }
 
 bool scan_patches(char* scanmatch, std::vector<std::string>& pArchiveNames)
@@ -283,8 +301,8 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames, int iCoreNum
 
         sprintf(path, "%s/Data/patch", input_path);
         if (!scan_patches(path, pArchiveNames))
-        { 
-            return(false); 
+        {
+            return(false);
         }
     }
 
@@ -312,9 +330,13 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames, int iCoreNum
             // check if locale exists:
             struct stat status;
             if (stat(localePath.c_str(), &status))
+            {
                 continue;
+            }
             if ((status.st_mode & S_IFDIR) == 0)
+            {
                 continue;
+            }
             printf(" Found locale '%s'\n", i->c_str());
             locales.push_back(*i);
         }
@@ -342,7 +364,7 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames, int iCoreNum
         {
             pArchiveNames.push_back(input_path + string("lichking.MPQ"));
         }
-       
+
         // now, scan for the patch levels in the core dir
         printf(" Scanning patch levels from data directory.\n");
         sprintf(path, "%spatch", input_path);
@@ -359,7 +381,9 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames, int iCoreNum
             printf(" Locale: %s\n", i->c_str());
             sprintf(path, "%s%s/patch-%s", input_path, i->c_str(), i->c_str());
             if (scan_patches(path, pArchiveNames))
+            {
                 foundOne = true;
+            }
         }
         printf("\n");
         if (!foundOne)
@@ -378,7 +402,7 @@ bool fillArchiveNameVector(std::vector<std::string>& pArchiveNames, int iCoreNum
 void Usage(char* prg)
 {
     printf(" Usage: %s [OPTION]\n\n", prg);
-    printf(" Extract client database fiels and generate map files.\n");
+    printf(" Extract client database files and generate map files.\n");
     printf("   -h, --help            show the usage\n");
     printf("   -d, --data <path>     search path for game client archives\n");
     printf("   -s, --small           extract smaller vmaps by optimizing data. Reduces\n");
@@ -392,8 +416,6 @@ void Usage(char* prg)
 bool processArgv(int argc, char** argv)
 {
     bool result = true;
-    bool hasInputPathParam = false;
-    bool preciseVectorData = true;
     char* param = NULL;
 
     for (int i = 1; i < argc; ++i)
@@ -406,7 +428,6 @@ bool processArgv(int argc, char** argv)
         else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--small") == 0 )
         {
             result = true;
-            preciseVectorData = false;
         }
         else if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--data") == 0 )
         {
@@ -418,7 +439,6 @@ bool processArgv(int argc, char** argv)
             }
 
             result = true;
-            hasInputPathParam = true;
             strcpy(input_path, param);
             if (input_path[strlen(input_path) - 1] != '\\' || input_path[strlen(input_path) - 1] != '/')
             {
@@ -463,7 +483,9 @@ int main(int argc, char** argv)
 
     // Use command line arguments, when some
     if (!processArgv(argc, argv))
-        { return 1; }
+    {
+        return 1;
+    }
 
     // some simple check if working dir is dirty
     else
@@ -507,7 +529,9 @@ int main(int argc, char** argv)
     {
         MPQArchive* archive = new MPQArchive(archiveNames[i].c_str());
         if (!gOpenArchives.size() || gOpenArchives.front() != archive)
-            { delete archive; }
+        {
+            delete archive;
+        }
     }
 
     if (gOpenArchives.empty())
@@ -516,16 +540,17 @@ int main(int argc, char** argv)
         return 1;
     }
     if (iCoreNumber == CLIENT_CLASSIC)
-    {    
+    {
         ReadLiquidTypeTableDBC();
     }
 
     // extract data
     if (success)
-        { success = ExtractWmo(iCoreNumber, szRawVMAPMagic); }
+    {
+        success = ExtractWmo(iCoreNumber, szRawVMAPMagic);
+    }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //map.dbc
+    // Open map.dbc
     if (success)
     {
         DBCFile* dbc = new DBCFile("DBFilesClient\\Map.dbc");
@@ -546,7 +571,7 @@ int main(int argc, char** argv)
 
 
         delete dbc;
-        ParsMapFiles(iCoreNumber, szRawVMAPMagic);
+        ParseMapFiles(iCoreNumber);
         delete [] map_ids;
         //nError = ERROR_SUCCESS;
         // Extract models, listed in DameObjectDisplayInfo.dbc
